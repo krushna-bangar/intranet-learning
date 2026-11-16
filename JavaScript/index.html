@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>All-in-One JavaScript Basics</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; line-height: 1.6; }
+    .box { padding: 15px; border: 2px solid #333; margin-top: 15px; border-radius: 5px; }
+    .highlight { background-color: #fff3cd; border-color: #ffc107; }
+  </style>
+</head>
+<body>
+
+  <h1 id="main-title">JavaScript Masterclass Demo</h1>
+  <p>Open your browser's Developer Console (F12) to see all outputs.</p>
+  
+  <input type="text" id="user-input" placeholder="Enter your name..." />
+  <button id="action-btn">Click Me!</button>
+  
+  <div id="output-box" class="box">Waiting for interaction...</div>
+
+  <script>
+    // ==========================================
+    // 1. KEYWORDS, VARIABLES & DATA TYPES
+    // ==========================================
+    // 'const' (cannot be reassigned), 'let' (block-scoped, reassignable), 'var' (older function-scoped)
+    const APP_NAME = "JS All-In-One";     // String (Primitive)
+    let userScore = 100;                  // Number (Primitive)
+    let isLoggedIn = true;                // Boolean (Primitive)
+    let emptyValue = null;                // Null (Primitive)
+    let notAssigned;                      // Undefined (Primitive)
+    const uniqueId = Symbol("id");        // Symbol (Primitive)
+    const bigNumber = 9007199254740991n;  // BigInt (Primitive)
+
+    // Reference Types (Objects & Arrays)
+    const skills = ["HTML", "CSS", "JavaScript"]; 
+    const userProfile = { username: "Coder123", level: 5 };
+
+    console.log("1. Data Types:", typeof APP_NAME, typeof userScore, typeof isLoggedIn, typeof skills);
+
+    // ==========================================
+    // 2. TYPE CONVERSION & COERCION
+    // ==========================================
+    let strNumber = "42";
+    let convertedNum = Number(strNumber); // Explicit conversion: String -> Number
+    let backToString = String(100);       // Explicit conversion: Number -> String
+    let truthyCheck = Boolean(1);         // Explicit conversion: Number -> Boolean (true)
+    let implicitCoercion = "5" + 2;       // Implicit coercion: "52" (String concatenation)
+    
+    console.log("2. Type Conversion:", convertedNum + 8, backToString, truthyCheck, implicitCoercion);
+
+    // ==========================================
+    // 3. STRING & ARRAY METHODS
+    // ==========================================
+    let rawText = "   JavaScript is Awesome!   ";
+    let cleanText = rawText.trim();                      // Removes whitespace
+    let upperText = cleanText.toUpperCase();             // "JAVASCRIPT IS AWESOME!"
+    let replacedText = cleanText.replace("Awesome", "Powerful");
+    let wordsArray = cleanText.split(" ");               // Splits into array: ["JavaScript", "is", "Awesome!"]
+    
+    // Template Literals (backticks)
+    console.log(`3. Strings: Original="${rawText}" | Modified="${replacedText}" | Words=${wordsArray.length}`);
+
+    // ==========================================
+    // 4. OPERATORS & CONDITIONAL STATEMENTS
+    // ==========================================
+    let age = 20;
+    let hasID = true;
+
+    // If / Else If / Else with Logical Operators (&&, ||, !)
+    if (age >= 18 && hasID) {
+      console.log("4. Conditionals: Access Granted.");
+    } else if (age >= 18 && !hasID) {
+      console.log("4. Conditionals: Please show ID.");
+    } else {
+      console.log("4. Conditionals: Access Denied.");
+    }
+
+    // Ternary Operator (Shorthand if/else)
+    let status = (userScore > 50) ? "Pass" : "Fail";
+
+    // Switch Statement
+    let role = "admin";
+    switch (role) {
+      case "admin":
+        console.log("4. Switch: Full system access.");
+        break;
+      case "editor":
+        console.log("4. Switch: Can edit content.");
+        break;
+      default:
+        console.log("4. Switch: Read-only access.");
+    }
+
+    // ==========================================
+    // 5. LOOPS (For, While, For...of, ForEach)
+    // ==========================================
+    console.log("5. Loops:");
+    // Standard 'for' loop
+    for (let i = 1; i <= 3; i++) {
+      console.log(`   For Loop count: ${i}`);
+    }
+
+    // 'while' loop
+    let counter = 0;
+    while (counter < 2) {
+      console.log(`   While Loop count: ${counter}`);
+      counter++;
+    }
+
+    // 'for...of' loop (iterating over arrays)
+    for (const skill of skills) {
+      console.log(`   Skill: ${skill}`);
+    }
+
+    // ==========================================
+    // 6. FUNCTIONS (Declaration, Expression, Arrow)
+    // ==========================================
+    // Function Declaration (Hoisted)
+    function addNumbers(a, b = 10) { // includes default parameter
+      return a + b;
+    }
+
+    // Function Expression
+    const multiplyNumbers = function(a, b) {
+      return a * b;
+    };
+
+    // Arrow Function (ES6+)
+    const greetUser = (name) => `Hello, ${name || "Guest"}!`;
+
+    console.log("6. Functions:", addNumbers(5), multiplyNumbers(4, 5), greetUser("Alex"));
+
+    // ==========================================
+    // 7. CLASSES & OBJECT-ORIENTED PROGRAMMING
+    // ==========================================
+    class Person {
+      constructor(name, role) {
+        this.name = name;
+        this.role = role;
+      }
+      introduce() {
+        return `Hi, I'm ${this.name} and I am a ${this.role}.`;
+      }
+    }
+
+    // Inheritance using 'extends' and 'super'
+    class Developer extends Person {
+      constructor(name, language) {
+        super(name, "Developer"); // Calls parent constructor
+        this.language = language;
+      }
+      code() {
+        return `${this.name} is writing ${this.language} code.`;
+      }
+    }
+
+    const dev = new Developer("Sam", "JavaScript");
+    console.log("7. Classes:", dev.introduce(), dev.code());
+
+    // ==========================================
+    // 8. ERROR HANDLING (Try / Catch / Finally)
+    // ==========================================
+    try {
+      // Intentionally calling a non-existent function to trigger an error
+      nonExistentFunction(); 
+    } catch (error) {
+      console.warn("8. Error Caught Safely:", error.message);
+    } finally {
+      console.log("8. Finally block always runs.");
+    }
+
+    // ==========================================
+    // 9. ASYNCHRONOUS JS (Promises & Async/Await)
+    // ==========================================
+    const fetchMockData = () => {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve("Data loaded from server!");
+        }, 1500);
+      });
+    };
+
+    async function loadData() {
+      console.log("9. Async: Fetching data...");
+      const result = await fetchMockData();
+      console.log("9. Async Result:", result);
+    }
+    loadData();
+
+    // ==========================================
+    // 10. DOM MANIPULATION & EVENTS
+    // ==========================================
+    // Selecting DOM elements
+    const titleElement = document.getElementById("main-title");
+    const inputElement = document.querySelector("#user-input");
+    const buttonElement = document.getElementById("action-btn");
+    const outputBox = document.getElementById("output-box");
+
+    // Adding an Event Listener
+    buttonElement.addEventListener("click", () => {
+      const typedName = inputElement.value.trim();
+      const greetingMessage = greetUser(typedName);
+
+      // Updating DOM text and HTML
+      outputBox.innerHTML = `<strong>${greetingMessage}</strong> Welcome to ${APP_NAME}.`;
+      
+      // Modifying CSS classes dynamically
+      outputBox.classList.add("highlight");
+      titleElement.style.color = "#0056b3";
+    });
+  </script>
+</body>
+</html>
