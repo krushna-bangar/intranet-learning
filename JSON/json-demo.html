@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>All-in-One JSON Masterclass</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; line-height: 1.6; max-width: 850px; }
+    pre { background: #1e1e1e; color: #d4d4d4; padding: 15px; border-radius: 5px; overflow-x: auto; }
+  </style>
+</head>
+<body>
+
+  <h1>JSON Concepts Masterclass</h1>
+  <p>Open your browser's Developer Console (F12) or read the output box below to inspect how JSON works in JavaScript.</p>
+  <pre id="output"></pre>
+
+  <script>
+    const outputEl = document.getElementById("output");
+    const log = (title, data) => {
+      const text = `\n=== ${title} ===\n${typeof data === "string" ? data : JSON.stringify(data, null, 2)}`;
+      outputEl.textContent += text + "\n";
+      console.log(title, data);
+    };
+
+    // =========================================================================
+    // 1. JSON SYNTAX & ALL 6 VALID JSON DATA TYPES
+    // =========================================================================
+    // Strict JSON Syntax Rules:
+    //   1. Keys MUST be wrapped in double quotes ("key": value). Single quotes fail!
+    //   2. Strings MUST use double quotes ("text").
+    //   3. NO trailing commas allowed after the last item in an object or array.
+    //   4. NO comments allowed inside standard JSON files.
+    //
+    // The 6 Valid JSON Data Types:
+    //   1. String  -> "Hello"
+    //   2. Number  -> 42 or 3.14
+    //   3. Boolean -> true or false
+    //   4. Null    -> null
+    //   5. Object  -> { "key": "value" }
+    //   6. Array   -> [ 1, 2, 3 ]
+
+    const validJsonString = `{
+      "courseName": "Full-Stack Web Development",
+      "version": 2.5,
+      "isPublished": true,
+      "deprecatedDate": null,
+      "instructor": {
+        "name": "Aarav Sharma",
+        "experienceYears": 8
+      },
+      "modules": [
+        { "id": 101, "topic": "JavaScript Basics" },
+        { "id": 102, "topic": "HTTP & REST APIs" },
+        { "id": 103, "topic": "JSON Data Format" }
+      ]
+    }`;
+
+    // =========================================================================
+    // 2. JSON.parse() -> CONVERTING JSON STRING INTO A JAVASCRIPT OBJECT
+    // =========================================================================
+    // When receiving data from a web server (HTTP response), it arrives as a raw string.
+    // JSON.parse() converts that text into a usable JS Object.
+    const courseObj = JSON.parse(validJsonString);
+
+    log("1. PARSED OBJECT ACCESS", {
+      Course: courseObj.courseName,
+      Instructor: courseObj.instructor.name,
+      SecondModule: courseObj.modules[1].topic
+    });
+
+    // =========================================================================
+    // 3. JSON.stringify() -> CONVERTING JAVASCRIPT OBJECT INTO A JSON STRING
+    // =========================================================================
+    // When sending data to an API (e.g., via POST), you must serialize JS objects into text.
+    const userPayload = {
+      userId: 501,
+      username: "dev_priya",
+      roles: ["admin", "editor"],
+      active: true
+    };
+
+    // Compact JSON string (used for network transmission to save bandwidth)
+    const compactJson = JSON.stringify(userPayload);
+
+    // Pretty-printed JSON string (3rd argument = number of spaces for indentation)
+    const prettyJson = JSON.stringify(userPayload, null, 2);
+
+    log("2A. COMPACT JSON STRING", compactJson);
+    log("2B. PRETTY JSON STRING", prettyJson);
+
+    // =========================================================================
+    // 4. WHAT JSON DROPS OR CONVERTS (UNSUPPORTED JS TYPES)
+    // =========================================================================
+    // JSON is a pure data format, NOT a programming language.
+    // Functions, 'undefined', and Symbols are silently omitted from objects!
+    // Date objects are automatically converted into ISO strings.
+    const jsWithUnsupportedTypes = {
+      name: "Test Object",
+      createdAt: new Date("2026-11-16T10:00:00Z"), // Converts to String
+      secretKey: undefined,                        // Omitted completely!
+      sayHi: function() { return "Hi"; },          // Omitted completely!
+      items: [1, undefined, "three"]               // 'undefined' in arrays becomes 'null'
+    };
+
+    log("3. UNSUPPORTED TYPES BEHAVIOR", JSON.stringify(jsWithUnsupportedTypes, null, 2));
+
+    // =========================================================================
+    // 5. ADVANCED: REPLACER (FILTERING) & REVIVER (TRANSFORMING)
+    // =========================================================================
+    // Replacer function in JSON.stringify(): Exclude sensitive fields like passwords
+    const account = { user: "rohan", password: "SuperSecretPassword123", plan: "Pro" };
+    const safeJson = JSON.stringify(account, (key, value) => {
+      if (key === "password") return undefined; // Returning undefined strips the property
+      return value;
+    }, 2);
+
+    log("4A. REPLACER (STRIPPED PASSWORD)", safeJson);
+
+    // Reviver function in JSON.parse(): Convert ISO date strings back into real JS Date objects
+    const rawEvent = '{"event": "Launch", "date": "2026-11-16T10:00:00.000Z"}';
+    const parsedEvent = JSON.parse(rawEvent, (key, value) => {
+      if (key === "date") return new Date(value);
+      return value;
+    });
+
+    log("4B. REVIVER (RESTORED DATE OBJECT)", `Is real Date instance? ${parsedEvent.date instanceof Date} -> Year: ${parsedEvent.date.getFullYear()}`);
+
+    // =========================================================================
+    // 6. ERROR HANDLING WITH MALFORMED JSON (Try / Catch)
+    // =========================================================================
+    // Passing invalid JSON (like single quotes or trailing commas) throws a SyntaxError.
+    const brokenJson = "{ 'name': 'Invalid Single Quotes', }";
+
+    try {
+      JSON.parse(brokenJson);
+    } catch (error) {
+      log("5. JSON SYNTAX ERROR CAUGHT", `${error.name}: ${error.message}`);
+    }
+  </script>
+</body>
+</html>
